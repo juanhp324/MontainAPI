@@ -5,22 +5,22 @@ PRICE_SLEEP_EXTRA = 1000
 PRICE_FOOD_EXTRA = 350
 
 def process_reservation(data):
-    if data.type == "sleep" and (not data.names_sleepers or len(data.names_sleepers) == 0):
-        return {"error": "Para reservar alojamiento debes proporcionar los nombres de las personas."}
+    # Calculamos la cantidad automáticamente basándonos en la lista de nombres
+    quantity = len(data.names_sleepers)
 
-    total_cost = PRICE_PASS_DAY * data.quantity
+    total_cost = PRICE_PASS_DAY * quantity
     
     if data.type == "sleep":
-        total_cost += (PRICE_SLEEP_EXTRA * data.quantity)
+        total_cost += (PRICE_SLEEP_EXTRA * quantity)
     
     if data.include_food:
-        total_cost += (PRICE_FOOD_EXTRA * data.quantity)
+        total_cost += (PRICE_FOOD_EXTRA * quantity)
 
     reserva_final = {
         "date": str(data.date),
         "type": data.type,
-        "quantity": data.quantity,
-        "names_sleepers": [p.name for p in data.names_sleepers] if data.names_sleepers else [],
+        "quantity": quantity,
+        "names_sleepers": [p.name for p in data.names_sleepers],
         "include_food": data.include_food,
         "total_to_pay": total_cost,
         "state": "pending"

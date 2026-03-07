@@ -7,10 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="MontainAPI")
 
-app.include_router(auth_router) 
-app.include_router(user_router)
-app.include_router(book_router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -18,6 +14,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router) 
+app.include_router(user_router)
+app.include_router(book_router)
 
 @app.get("/")
 def home():
