@@ -1,0 +1,25 @@
+# Variables de entorno (NUNCA subir a Git)
+.env
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Render
+.render-buildpacks.json
+*.env*
+.env copy

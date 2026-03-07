@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: MontainAPI
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn application.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URI
+        sync: false   # Lo escribirás manualmente en el Dashboard de Render
+      - key: SECRET_KEY
+        generateValue: true   # Render genera un valor aleatorio seguro automáticamente
