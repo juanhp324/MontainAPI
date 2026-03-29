@@ -1,1 +1,69 @@
-This file will contain a complete list of all security issues, bugs, and improvements needed for the MountainAPI project.
+# 🔴 REPORTE DE PROBLEMAS - MountainAPI
+
+## CRÍTICOS (Arreglar INMEDIATAMENTE)
+
+### 1. **Credenciales del Admin Hardcodeadas en el Código** 🚨
+**Archivo:** `init_db.py` (líneas 26-27)
+- **Problema:** Las credenciales del administrador están visibles en código fuente.
+- **Impacto:** Acceso no autorizado total si el código es expuesto.
+- **Solución:** Mover a variables de entorno (`.env`).
+
+### 2. **Uso de SHA-256 para Hashear Contraseñas** 🚨
+**Archivos:** `init_db.py`, `application/services/SAuth.py`
+- **Problema:** SHA-256 es vulnerable a ataques de fuerza bruta rápidos y no usa "salt".
+- **Impacto:** Riesgo extremo de compromiso masivo de cuentas si la BD es robada.
+- **Solución:** Usar `bcrypt` (ya requerido en `requirements.txt` o instalarlo).
+
+### 3. **CORS Abierto al Mundo** 🚨
+**Archivo:** `application/main.py`
+- **Problema:** `allow_origins=["*"]` permite acceso desde cualquier sitio web.
+- **Impacto:** Vulnerable a CSRF y ataques de sitios externos.
+- **Solución:** Restringir a dominios específicos.
+
+### 4. **Sin Validación de Roles en Endpoints Admin** 🚨
+**Archivo:** `application/routes/RBooking.py`
+- **Problema:** Endpoints administrativos solo verifican autenticación, no rol.
+- **Impacto:** Cualquier usuario autenticado puede gestionar reservas ajenas.
+- **Solución:** Implementar validación de campo `role` en el token.
+
+### 5. **Sin Rate Limiting en Login** 🚨
+**Archivo:** `application/routes/RAuth.py`
+- **Problema:** No hay límite de intentos de inicio de sesión.
+- **Impacto:** Vulnerable a ataques de fuerza bruta.
+- **Solución:** Implementar `slowapi`.
+
+---
+
+## ALTOS (Arreglar pronto)
+
+### 6. **Sin Validación de Autenticación en POST /booking/create** ⚠️
+- **Problema:** Cualquiera puede crear reservas sin estar logueado.
+- **Impacto:** Reservas anónivas y fraudulentas.
+- **Solución:** Requerir `Depends(get_current_user)`.
+
+### 7. **Sin Validación de Fechas Futuras** ⚠️
+- **Problema:** Se permiten reservas con fechas pasadas.
+- **Impacto:** Inconsistencia de datos y reportes erróneos.
+- **Solución:** Agregar validador en Pydantic en `VBooking.py`.
+
+### 8. **Sin Logging Estructurado** ⚠️
+- **Problema:** Falta registro de eventos críticos (login, cambios de reserva).
+
+### 9. **Sin Manejo de Errores Global** ⚠️
+- **Problema:** Errores de BD o internos devuelven información inconsistente o genérica.
+
+### 10. **Sin Tests Automatizados** ⚠️
+- **Problema:** No hay verificación de que nuevas funciones o cambios no rompan lo existente.
+
+---
+
+## MEDIANOS (Mejorar después)
+
+### 11. **Sin Documentación de API (README)**
+### 12. **Sin Documentación de Swagger/OpenAPI Clara**
+### 13. **Falta Validación en Nombres de Personas**
+### 14. **Sin Validación en Estados de Reserva en el Schema**
+### 15. **Sin Validación de Email Duplicado**
+### 16. **Contraseñas Débiles Permitidas**
+### 17. **Token JWT sin Refresh**
+### 18. **Sin Protección Específica contra Inyección NoSQL**
